@@ -1,0 +1,36 @@
+version: '3'
+services:
+  django:
+    build: ./django
+    image: django
+    volumes:
+      - django_vol:/usr/src/app
+    container_name: django
+    restart: always
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+  db:
+    image: postgres
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: user 
+      POSTGRES_DB: db_name
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8008:8080
+volumes:
+  django_vol:
+    driver: local
+    driver_opts:
+      type: none
+      device: /Users/eboulhou/Desktop/django/django/volume
+      o: bind
+
+

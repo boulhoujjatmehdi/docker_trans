@@ -5,17 +5,18 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="{% static 'css/style.css'%}">
+        <link rel="stylesheet" id="dynamic_css" href="">
             <title>HOME | AIT LWEB</title>
     </head>
-    <body>
+    <body onload="loadContent('home')">
         <div class="container" >
             <div class="side-panel">
                  <img src=" {%static  'images/Logo.svg'  %}" class="logo">
                 <div class="nav-options" >
-                    <button class="btn-option flex-center btn-highlight">
+                    <button class="btn-option flex-center btn-highlight" onclick="loadContent('home')">
                         <img src=" {%static  'images/Home.svg'  %}">
                     </button>
-                    <button class="btn-option flex-center btn-simple">
+                    <button class="btn-option flex-center btn-simple" onclick="loadContent('game')">
                         <img src=" {%static  'images/Users.svg'  %}">
                     </button>
                     <button class="btn-option flex-center btn-simple">
@@ -38,40 +39,9 @@
                     </div>
                 </div>
                 <div class="center-console">
-                    <div class="parent">
-                        <div class="div1"> 
-
-                        </div>
-                        <div class="game-picker">
-                            <div class="picker-1"></div>
-                            <div class="picker-2"></div>                                
-                            <div class="picker-3"></div>
-                        </div>
-                        <div class="div3"> 
-
-                        </div>
-                        <div class="div4">
-
-                        </div>
-                        <div class="leader-board">
-                            <div class="leader-board_div">
-                                <div class="triangle-1"></div>
-                                <div class="triangle-2"></div>
-                                <div class="leader-board-0"></div>
-                                <div class="leader-board-1"></div>
-                                <div class="leader-board-2"></div>
-                                <div class="leader-board-3"></div>
-                                <div class="leader-board-4"></div>
-
-                            </div>
-                        </div>
-                        <div class="best-match"> 
-                            <div class="best-match-div">
-
-                            </div>
-                        </div>
-                        </div>
-                </div>
+                    <div class="parent" id="content">
+                    </div>
+                </div> 
             </div>
             <div class="right-side-panel">
                  <div class="upper-section">
@@ -152,5 +122,28 @@
             </div>
         </div>
         <script src="{%static  'js/script.js'  %}"></script>
+        {% comment %} <script src="" id="dynamic_js"></script> {% endcomment %}
+        <script>
+            function loadContent(page) {
+                fetch(`/${page}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('content').innerHTML = data.content;
+                        document.getElementById('dynamic_css').href = data.css;
+                        loadScript(data.js);
+                    });
+            }
+            function loadScript(src) {
+                const existingScript = document.getElementById('dynamic-js');
+                if (existingScript) {
+                    existingScript.remove();
+                }
+                const script = document.createElement('script');
+                script.src = src;
+                script.id = 'dynamic-js';
+                script.onload = () => console.log(`${src} loaded`);
+                document.body.appendChild(script);
+            }
+        </script>
     </body>
 </html>

@@ -321,8 +321,13 @@ body {
 /* ----------CENTER CONSOLE-------------- */
 
 .center-console{
-    flex: 13;
+    /* background-color: #ffffff57; */
+    display: flex;
+	flex: 13;
     width: 100%;
+    /* height: 100%; */
+    justify-content: center;
+	align-items: center;
 }
 
 .parent {
@@ -335,7 +340,7 @@ body {
     grid-row-gap: 0px;
     grid-gap: 20px;
 }
-:root {
+/* :root {
     --div1-grid-area: 1 / 1 / 5 / 7;
     --div2-grid-area: 1 / 7 / 5 / 11;
     --div3-grid-area: 5 / 7 / 13 / 11;
@@ -359,7 +364,7 @@ body {
 .div1 {
     grid-area: var(--div1-grid-area);
     border:1px solid black;
-    overflow: hidden; /* Add this line */
+    overflow: hidden; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -370,8 +375,6 @@ body {
 .div1::before {
     content: "";
     position: absolute;
-    /* top: 0;
-    left: 0; */
     width: 150%;
     height: 200%;
 
@@ -405,7 +408,6 @@ body {
 }
 .leader-board {
     grid-area: var(--div3-grid-area);
-    /* background-image: linear-gradient(141.528deg, #053732 4%, #025A51 25%, #11776B 51%, #157064 69%, #1A5249 100%); */
 }
 .leader-board_div{
     width: 95%;
@@ -429,7 +431,6 @@ body {
 
 
 .best-match div {
-    /* flex: 1; */
     width: 95%;
     height: 90%;
     border: 1px solid white;
@@ -443,7 +444,7 @@ body {
     align-items: end;
 }
 
-/* -----picker 1--------*/
+
 [class^="picker-"]{
     width: 95%;
     height: 30%;
@@ -455,7 +456,7 @@ body {
     width: 100%;
     flex: 1;
     border: 1px solid white;
-}
+} */
 
 
 /* .triangle-1 {

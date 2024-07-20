@@ -17,5 +17,7 @@ db:
 	docker exec -it db sh
 dj:
 	docker exec -it django sh
+user_api_sh:
+	docker exec -it user_api sh
 
-PHONY: all down re db dj
+PHONY: all down re db dj user_api

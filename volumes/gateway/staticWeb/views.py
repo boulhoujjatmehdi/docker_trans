@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseServerError
 from django.template.loader import render_to_string
+from rest_framework.response import Response
+import requests
 
 # Create your views here.
 def index(request):
@@ -17,3 +19,16 @@ def game(request):
     css = 'static/css/game.css'
     js = 'static/js/racket-mv.js'
     return JsonResponse({'content': string, 'css':css, 'js':js})
+
+
+def login(request):
+    url = 'http://userapi:8000/api/simple/'
+
+    response = requests.get(url)
+    if response.status_code == 201:
+        data = response.json()
+        return JsonResponse(data)
+    else:
+        return HttpResponseServerError('Failed To Fetch Data')
+    return render(request, 'login.html')
+        

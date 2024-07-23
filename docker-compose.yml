@@ -18,7 +18,7 @@ services:
     image: user_api
     volumes:
       - vol_user_api:/usr/src/app
-    container_name: user_api
+    container_name: userapi
     restart: always
     ports:
       - 8001:8000

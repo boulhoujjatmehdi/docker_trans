@@ -1,70 +1,133 @@
 version: '3'
 services:
 
-  django:
-    build: ./django
-    image: django
-    volumes:
-      - gateway:/usr/src/app
-    container_name: django
+  pong:
+    build: ./pong
+    image: pong
+    container_name: pong
     restart: always
+    volumes:
+      - PongVol:/usr/src/app
     ports:
       - 8000:8000
-    depends_on:
-      - db
 
-  user_api:
-    build: ./user_api
-    image: user_api
-    volumes:
-      - vol_user_api:/usr/src/app
-    container_name: userapi
-    restart: always
-    ports:
-      - 8001:8000
-    depends_on:
-      - db
-
-
-  db:
+  database:
     image: postgres
-    container_name: db
-    restart: always
-    volumes:
-      - vol_db:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: example
-      POSTGRES_USER: user 
-      POSTGRES_DB: db_name
-
-
-  adminer:
-    image: adminer
-    container_name: adminer
+    container_name: database
     restart: always
     ports:
-      - 8008:8080
+      - 5432:5432
+    volumes:
+      - DatabaseVol:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: root 
+      POSTGRES_PASSWORD: rootroot
+      POSTGRES_DB: db_pong
+
+  frontend:
+    image: node:14
+    container_name: frontend
+    restart: always
+    volumes:
+      - FrontVol:/usr/src/app
+    working_dir:
+      /usr/src/app
+    command: bash -c "node server.js"
+    ports:
+      - 8080:8080
 
 volumes:
-  gateway:
+  PongVol:
     driver: local
     driver_opts:
       type: none
-      device: /Users/eboulhou/Desktop/docker_trans/volumes/gateway
+      device: /Users/eboulhou/Desktop/docker_trans/pong/volumes/PongVol
       o: bind
+  DatabaseVol:
+    driver: local
+    driver_opts:
+      type: none
+      device: /Users/eboulhou/Desktop/docker_trans/pong/volumes/DatabaseVol
+      o: bind
+  FrontVol:
+    driver: local
+    driver_opts:
+      type: none
+      device: /Users/eboulhou/Desktop/docker_trans/frontend/FrontVol
+      o: bind
+  
 
-  vol_user_api:
-    driver: local
-    driver_opts:
-      type: none
-      device: /Users/eboulhou/Desktop/docker_trans/volumes/user_api
-      o: bind
-  vol_db:
-    driver: local
-    driver_opts:
-      type: none
-      device: /Users/eboulhou/Desktop/docker_trans/volumes/db
-      o: bind
+
+
+
+
+#   django:
+#     build: ./django
+#     image: django
+#     volumes:
+#       - gateway:/usr/src/app
+#     container_name: django
+#     restart: always
+#     ports:
+#       - 8000:8000
+#     depends_on:
+#       - db
+
+#   user_api:
+#     build: ./user_api
+#     image: user_api
+#     volumes:
+#       - vol_user_api:/usr/src/app
+#     container_name: userapi
+#     restart: always
+#     ports:
+#       - 8001:8000
+#     depends_on:
+#       - db
+
+#   db:
+#     image: postgres
+#     container_name: db
+#     restart: always
+#     ports:
+#       - 5432:5432
+#     volumes:
+#       - vol_db:/var/lib/postgresql/data
+#     environment:
+#       POSTGRES_PASSWORD: example
+#       POSTGRES_USER: user 
+#       POSTGRES_DB: db_name
+
+#   adminer:
+#     image: adminer
+#     container_name: adminer
+#     restart: always
+#     ports:
+#       - 8008:8080
+
+# volumes:
+#   gateway:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: /Users/eboulhou/Desktop/docker_trans/volumes/gateway
+#       o: bind
+
+#   vol_user_api:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: /Users/eboulhou/Desktop/docker_trans/volumes/user_api
+#       o: bind
+
+#   vol_db:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: /Users/eboulhou/Desktop/docker_trans/volumes/db
+#       o: bind
+
+
   
 
 

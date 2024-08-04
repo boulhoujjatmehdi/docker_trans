@@ -2,11 +2,9 @@ from rest_framework.views import APIView
 from .serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
-from django.http import HttpResponseRedirect
+from django.db import IntegrityError
 from .models import User
 import jwt, datetime
-from django.shortcuts import render
-#
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
 
@@ -16,9 +14,11 @@ class RegisterView(APIView):
             serializer = UserSerializer(data = request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
+        except IntegrityError as e:
+            return (Response({"detail": str(e)}))
         except:
-            return (Response({"message": "user already exists"}))
-        return Response(serializer.data)
+            return Response({"detail": "Error at sign up!"})
+        return Response({"detail": "Sucessfully signed up"})
 
 class LoginView(APIView):
     def post(self, request):
@@ -39,7 +39,7 @@ class LoginView(APIView):
         token  = jwt.encode(payload, 'secret', algorithm='HS256')
         response = Response()
         response.data = {
-            'message':'connected'
+            'detail':'connected'
         }
         # response = HttpResponseRedirect('/')
         response.set_cookie(key='jwt',value=token, httponly=True)
@@ -70,8 +70,7 @@ class LogoutView(APIView):
 
 
 
-from django.middleware.csrf import get_token
-from django.http import JsonResponse
+
 
 def csrf_token_view(request):
     token = get_token(request)

@@ -23,7 +23,7 @@ export default class Dashboard extends HTMLElement {
                         <img src="../images/Sms.svg">
                     </a>
                 </div> 
-                <a href="/" data-link  class="nav__link logout flex-center">
+                <a data-link onclick="logoutRequest()" class="nav__link logout flex-center">
                     <img src="../images/Logout.svg">
                 </a>
             </div>
@@ -132,5 +132,8 @@ export default class Dashboard extends HTMLElement {
         `;
     }
 }
+let script = document.createElement('script');
+script.src = '../script/dashboard.js';
+document.body.appendChild(script);
 
 customElements.define("dashboard-page", Dashboard);

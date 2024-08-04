@@ -23,5 +23,7 @@ auth:
 	docker exec -it authapi sh
 pongg:
 	docker exec -it pong sh
+fronten:
+	docker exec -it frontend sh
 
-PHONY: all down re db dj user_api pong
+PHONY: all down re db dj user_api pong frontend

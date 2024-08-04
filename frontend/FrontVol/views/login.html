@@ -6,10 +6,11 @@
     
 <div class="container" id="container">
     <div class="left-side form-container sign-in-container ">
-        <form id="myForm">
+        <form id="signInForm">
+            <h3 id="signInMessage"></h3>
             <input type="email" placeholder="Email" name="email" required />
-            
             <input type="password" placeholder="Password" name="password" required />
+
             <div class="centerfor">
                 <div class="remember">
 
@@ -41,15 +42,14 @@
     </div>
     <div class="form-container sign-up-container">
         <div class="left-side">
-            <form >
+            <form id="signUpForm">
                 
-                
-                <input type="text" placeholder="Username" name="username" required />
+                <h3 id="signUpMessage"></h3>
                 <input type="email" placeholder="Email" name="email" required />
-                
+                <input type="text" placeholder="Name" name="name" required />
                 <input type="password" placeholder="Password" name="password" required />
                 <input type="password" placeholder="Confirme Password" name="password" required />
-                
+
                 <button type="submit" class="login-btn">Sign Up</button>
                 <div class="orline">
                     <div class="line"></div>

@@ -6,13 +6,18 @@ from django.http import HttpResponseRedirect
 from .models import User
 import jwt, datetime
 from django.shortcuts import render
-# Create your views here.
+#
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
 
 class RegisterView(APIView):
     def post(self, request):
-        serializer = UserSerializer(data = request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        try:
+            serializer = UserSerializer(data = request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+        except:
+            return (Response({"message": "user already exists"}))
         return Response(serializer.data)
 
 class LoginView(APIView):
@@ -34,7 +39,7 @@ class LoginView(APIView):
         token  = jwt.encode(payload, 'secret', algorithm='HS256')
         response = Response()
         response.data = {
-            'message':'all good'
+            'message':'connected'
         }
         # response = HttpResponseRedirect('/')
         response.set_cookie(key='jwt',value=token, httponly=True)
@@ -62,3 +67,9 @@ class LogoutView(APIView):
             'message':'success',
         }
         return response
+
+def get_csrf_token(request):
+    csrf_token = get_token(request)
+    response = Response()
+    response.set_cookie(key='csrfToken', value=csrf_token, httponly=True)
+    return response

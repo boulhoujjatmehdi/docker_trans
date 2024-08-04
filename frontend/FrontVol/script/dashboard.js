@@ -15,3 +15,24 @@ buttons.forEach(function(btn){
 
 
 
+function logoutRequest()
+{
+    fetch("http://localhost:8000/api/token/", {
+        method:'post',
+        credentials: 'include'
+    })
+    .then(data=>{
+        csrftoken = data.csrfToken;
+        fetch("http://localhost:8000/api/logout/", {
+            method: 'post',
+            credentials: 'include',
+            'X-CSRFToken': csrftoken
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("logged out ", data);
+        })
+        .catch(error => console.log("error", error));
+    })
+    
+}

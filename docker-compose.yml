@@ -41,19 +41,19 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /Users/eboulhou/Desktop/docker_trans/pong/volumes/PongVol
+      device: /home/devup/Desktop/docker_trans/pong/volumes/PongVol
       o: bind
   DatabaseVol:
     driver: local
     driver_opts:
       type: none
-      device: /Users/eboulhou/Desktop/docker_trans/pong/volumes/DatabaseVol
+      device: /home/devup/Desktop/docker_trans/pong/volumes/DatabaseVol
       o: bind
   FrontVol:
     driver: local
     driver_opts:
       type: none
-      device: /Users/eboulhou/Desktop/docker_trans/frontend/FrontVol
+      device: /home/devup/Desktop/docker_trans/frontend/FrontVol
       o: bind
   
 

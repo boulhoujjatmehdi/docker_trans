@@ -55,6 +55,7 @@ MIDDLEWARE = [
     'users.middleware.JWTAuthenticationMiddleware'
 ]
 
+
 ROOT_URLCONF = 'pong.urls'
 
 TEMPLATES = [
@@ -139,3 +140,5 @@ AUTH_USER_MODEL = 'users.User'
 
 CORS_ALLOW_CREDENTIALS= True
 CORS_ORIGIN_ALLOW_ALL= True
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8080/']

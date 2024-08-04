@@ -68,8 +68,13 @@ class LogoutView(APIView):
         }
         return response
 
-def get_csrf_token(request):
-    csrf_token = get_token(request)
-    response = Response()
-    response.set_cookie(key='csrfToken', value=csrf_token, httponly=True)
-    return response
+
+
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
+
+def csrf_token_view(request):
+    token = get_token(request)
+    return JsonResponse({'csrfToken': token})
+
+

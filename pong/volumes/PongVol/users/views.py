@@ -35,7 +35,6 @@ class LoginView(APIView):
             'exp': datetime.datetime.utcnow() + datetime.timedelta(days=2),
             'iat': datetime.datetime.utcnow()
         }
-        # token = jwt.encode(payload, 'secret', algorithm='HS256').decode('utf-8')
         token  = jwt.encode(payload, 'secret', algorithm='HS256')
         response = Response()
         response.data = {
@@ -69,11 +68,19 @@ class LogoutView(APIView):
         return response
 
 
-
-
-
 def csrf_token_view(request):
     token = get_token(request)
     return JsonResponse({'csrfToken': token})
 
 
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def data_to_only_logged_users(request):
+    # if request.user:
+    return JsonResponse({'message':"message for only logged on users that have the permition"})
+    # return JsonResponse({'message':"failed in the login check"})

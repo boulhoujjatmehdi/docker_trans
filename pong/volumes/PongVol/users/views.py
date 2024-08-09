@@ -25,7 +25,7 @@ class LoginView(APIView):
         email = request.data['email']
         password =request.data['password']
         user = User.objects.filter(email=email).first()
-        if user is None:
+        if user.is_anonymous:
             raise AuthenticationFailed('user not found')
         if not user.check_password(password):
             raise AuthenticationFailed('incorrect password')
@@ -78,8 +78,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
 def data_to_only_logged_users(request):
     # if request.user:
     return JsonResponse({'message':"message for only logged on users that have the permition"})

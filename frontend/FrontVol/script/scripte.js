@@ -43,7 +43,7 @@ document.getElementById('signInForm').addEventListener('submit', function(event)
 	const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 	
 	// Send the form data using fetch
-	fetch('http://localhost:8000/api/login/', {
+	fetch('/api/login/', {
 		method: 'POST',
 		body: formData,
 		credentials: 'include',
@@ -93,7 +93,7 @@ document.getElementById('signUpForm').addEventListener('submit', function(event)
 	if(check_password())
 	{
 		// Send the form data using fetch
-		fetch('http://localhost:8000/api/register/', {
+		fetch('/api/register/', {
 			method: 'POST',
 			body: formData,
 			credentials: 'include',
@@ -130,7 +130,7 @@ document.getElementById('signUpForm').addEventListener('submit', function(event)
 
 
 async function fetchCsrfToken() {
-	const response = await fetch('http://localhost:8000/api/csrf-token/', {
+	const response = await fetch('/api/csrf-token/', {
 		credentials: 'include'
 	});
 	const data = await response.json();
@@ -144,3 +144,46 @@ fetchCsrfToken().then(csrfToken => {
 
 	console.log(csrfToken);
 });
+
+
+function google_auth(){
+
+
+		const clientId = '36859905646-l3ad3gji2poscl1u0r2osg2qmnehq405.apps.googleusercontent.com';
+		const redirectUri = 'http://localhost:8080/accounts/google/login/callback/';
+		const scope = 'profile email';
+		const responseType = 'code';
+		
+		const googleAuthUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}`;
+		window.location.href = googleAuthUrl;
+
+}
+
+const exchangeCodeForToken = async (authCode) => {
+    try {
+        const response = await fetch('https://yourdomain.com/api/auth/google/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ code: authCode })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const token = data.token;  // Assuming your backend responds with a JWT
+            localStorage.setItem('jwt', token);  // Store the JWT in local storage or wherever you manage tokens
+        } else {
+            console.error('Failed to exchange code for token');
+        }
+    } catch (error) {
+        console.error('Error exchanging code for token:', error);
+    }
+};
+
+// Capture the authorization code from the URL
+const urlParams = new URLSearchParams(window.location.search);
+const authCode = urlParams.get('code');
+if (authCode) {
+    exchangeCodeForToken(authCode);
+}

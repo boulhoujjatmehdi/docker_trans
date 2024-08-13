@@ -11,15 +11,16 @@ from django.http import JsonResponse
 class RegisterView(APIView):
     def post(self, request):
         try:
+            print(request.data)
             serializer = UserSerializer(data = request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
         except IntegrityError as e:
-            return (Response({"detail": str(e)}))
-        except:
-            return Response({"detail": "Error at sign up!"})
+            return Response({"detail": str(e)}, 401)    
+        except Exception as e:
+            return Response({"detail": "Error at sign up!"}, 401)
         return Response({"detail": "Sucessfully signed up"})
-
+from .functions import gen_token
 class LoginView(APIView):
     def post(self, request):
         email = request.data['email']
@@ -30,12 +31,8 @@ class LoginView(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed('incorrect password')
         
-        payload = {
-            'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=2),
-            'iat': datetime.datetime.utcnow()
-        }
-        token  = jwt.encode(payload, 'secret', algorithm='HS256')
+        token = gen_token(user) #this custom function is generating new token for the user using user.id
+        
         response = Response()
         response.data = {
             'detail':'connected'

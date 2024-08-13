@@ -29,18 +29,18 @@ services:
       - net
 
   frontend:
-    image: node:14
-    container_name: frontend
-    restart: always
-    volumes:
-      - FrontVol:/usr/src/app
-    working_dir:
-      /usr/src/app
-    command: bash -c "node server.js"
-    ports:
-      - 8080:8080
-    networks:
-      - net
+      image: nginx:1.27.0
+      container_name: frontend
+      restart: always
+      volumes:
+        - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
+        - FrontVol:/usr/share/nginx/html
+      ports:
+        - 8080:80
+      networks:
+        - net
+
+
   # rachid part
   adminer:
     image: adminer

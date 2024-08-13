@@ -17,3 +17,7 @@ export default class Game extends HTMLElement {
 }
 
 customElements.define("game-page", Game);
+
+
+
+

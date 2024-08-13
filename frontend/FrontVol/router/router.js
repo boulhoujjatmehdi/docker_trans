@@ -54,8 +54,9 @@ export const Routes = [
         path: '/dashboard/game',
         component: Game
     },
-    
 ]
+
+
 
 class Router {
     constructor() {

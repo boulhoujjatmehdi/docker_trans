@@ -2,4 +2,6 @@
 .venv/
 .vscode/
 
-pong/volumes/DatabaseVol/
+./pong/volumes/DatabaseVol/.*
+
+DatabaseVol.zip

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-t-+d!r7qqkym$=5(lpn%)2u3(=ql(+ow$0dqw154)gk85psz72
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["pong", "localhost"]
 
 
 # Application definition
@@ -41,7 +41,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'access_type': 'online',
         },
-        'OAUTH_PKCE_ENABLED': True,
+        # 'OAUTH_PKCE_ENABLED': True,
     }
 }
 
@@ -112,6 +112,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
+
     },
 ]
 

@@ -32,10 +32,16 @@ def GameView(request):
 
 def DataView(request):
     user_name = None
+    uid = None
+    email = None
     if request.user.is_authenticated:
+        uid = request.user.id
+        email = request.user.email
         user_name = request.user.name
     data = JsonResponse({
         'message':'message from DataView',
-        'user_name': user_name
+        'user_name': user_name,
+        'id': uid,
+        'email': email
     })
     return data

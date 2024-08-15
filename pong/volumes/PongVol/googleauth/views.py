@@ -93,7 +93,7 @@ def google_dauth(request):
         if not email:
             return JsonResponse({'error': 'Failed to retrieve email from Google'}, status=400)
         
-        user_name = user_info.get('email', email).split('@')[0] #get the first part of the email to be the username
+        user_name = user_info.get('email', email).split('@')[0] #Get the first part of the email to be the username
 
         user, created = User.objects.get_or_create(email=email, defaults={
             'username': user_info.get('email', email),
@@ -106,22 +106,15 @@ def google_dauth(request):
             pass
 
         # Generate a JWT token for the user
-        payload = {
-            'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=2),
-            'iat': datetime.datetime.utcnow()
-        }
         jwt_token = gen_token(user)
 
         # Return the JWT token in the response
-        response = Response()
-        # //TODO:CHECK1
+        response =  HttpResponseRedirect('/dashboard')
         response.data = {
             'token': jwt_token,
             'detail': 'OAuth login successful'
         }
         response.set_cookie(key='jwt', value=jwt_token, httponly=True)
-        response = HttpResponseRedirect('/dashboard')
         return response
     else:
         return HttpResponseRedirect('/login')

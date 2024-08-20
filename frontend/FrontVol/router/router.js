@@ -183,3 +183,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     router.navigate(window.location.pathname);
 });
+

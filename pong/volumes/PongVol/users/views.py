@@ -54,10 +54,14 @@ class UserView(APIView):
         user = User.objects.filter(id=payload['id']).first()
         serializer = UserSerializer(user)
         return Response(serializer.data)
-
+from .models import TokensCustom
+from django.http import HttpResponseRedirect
 class LogoutView(APIView):
     def post(self, request):
-        response = Response()
+        tok = TokensCustom.objects.filter(token = request.COOKIES.get('jwt')).first()
+        if tok:
+            tok.delete()
+        response = HttpResponseRedirect('/login')
         response.delete_cookie('jwt')
         response.data = {
             'message':'success',

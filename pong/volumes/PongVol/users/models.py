@@ -27,7 +27,10 @@ class TokensCustom(models.Model):
     retired = models.BooleanField(default=False)
 
     def is_valid(self):
-        return timezone.now() < self.expires_at
+        if timezone.now() < self.expires_at:
+            self.delete()
+            return False
+        return True
     
     def save(self, *args, **kwargs):
         if self.pk is None and TokensCustom.objects.filter(user_id = self.user_id).count() >= 3:

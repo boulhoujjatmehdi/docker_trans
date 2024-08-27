@@ -28,9 +28,17 @@ class TokensCustom(models.Model):
 
 
     def is_valid(self):
-        return timezone.now() < self.expires_at
+        if timezone.now() < self.expires_at:
+            return True
+        self.delete()
+        return False
     
     def save(self, *args, **kwargs):    
         if self.pk is None and TokensCustom.objects.filter(user_id = self.user_id).count() >= 3:
             TokensCustom.objects.filter(user_id = self.user_id).first().delete()
         super().save(*args,**kwargs)
+
+    @staticmethod
+    def delete_expired_tokens(user):
+        TokensCustom.objects.filter(expires_at__lt = timezone.now() , user_id = user).delete()
+        pass

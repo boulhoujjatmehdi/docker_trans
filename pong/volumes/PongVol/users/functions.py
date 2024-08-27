@@ -14,6 +14,7 @@ def gen_token(user):
         }
         token  = jwt.encode(payload, 'secret', algorithm='HS256')
         decoded = jwt.decode(token,'secret', algorithms=['HS256'])
+        TokensCustom.delete_expired_tokens(user)
         savetoken = TokensCustom()
         savetoken.token = token
         savetoken.created_at = datetime.datetime.fromtimestamp(decoded['iat'])

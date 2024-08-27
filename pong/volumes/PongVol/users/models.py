@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, IntegrityError
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
@@ -17,10 +17,36 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-    
+      
     @property
     def is_online(self):
         if self.last_seen:
             return timezone.now()
         else:
             return False
+    
+
+
+class TokensCustom(models.Model):
+    token = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    retired = models.BooleanField(default=False)
+
+
+    def is_valid(self):
+        if timezone.now() < self.expires_at:
+            return True
+        self.delete()
+        return False
+    
+    def save(self, *args, **kwargs):    
+        if self.pk is None and TokensCustom.objects.filter(user_id = self.user_id).count() >= 3:
+            TokensCustom.objects.filter(user_id = self.user_id).first().delete()
+        super().save(*args,**kwargs)
+
+    @staticmethod
+    def delete_expired_tokens(user):
+        TokensCustom.objects.filter(expires_at__lt = timezone.now() , user_id = user).delete()
+        pass

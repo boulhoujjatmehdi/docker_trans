@@ -48,7 +48,7 @@ class oauth42(APIView):
 
             if created:
                 pass
-
+            
             jwt_token = gen_token(user)
 
             response = HttpResponseRedirect('/dashboard')

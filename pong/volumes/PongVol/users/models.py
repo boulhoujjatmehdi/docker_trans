@@ -26,13 +26,11 @@ class TokensCustom(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     retired = models.BooleanField(default=False)
 
+
     def is_valid(self):
-        if timezone.now() < self.expires_at:
-            self.delete()
-            return False
-        return True
+        return timezone.now() < self.expires_at
     
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):    
         if self.pk is None and TokensCustom.objects.filter(user_id = self.user_id).count() >= 3:
             TokensCustom.objects.filter(user_id = self.user_id).first().delete()
         super().save(*args,**kwargs)

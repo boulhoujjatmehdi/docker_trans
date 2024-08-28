@@ -87,3 +87,38 @@ def data_to_only_logged_users(request):
     # if request.user:
     return JsonResponse({'message':"message for only logged on users that have the permition"})
     # return JsonResponse({'message':"failed in the login check"})
+
+
+
+
+
+from django.shortcuts import render
+from .models import User, create_totp_device, generate_qr_code
+
+def enable_otp(request):
+    totp_device = create_totp_device(request.user)
+    qr_code = generate_qr_code(totp_device)
+    return render(request, 'enable_otp.html', {'qr_code': qr_code})
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django_otp.plugins.otp_totp.models import TOTPDevice
+
+def confirm_otp(request):
+    if request.method == 'POST':
+        otp = request.POST['otp']
+
+        totp_device = TOTPDevice.objects.get(user = request.user, confirmed=False)
+    
+        if totp_device.verify_token(otp):
+            # totp_device.confirmed = True
+
+            # totp_device.save()
+            messages.success(request, 'OTP setup successful.')
+            return JsonResponse({"message":"sucessfully confirmed one time password"})
+        else:
+            return JsonResponse({"message": 'Invalid OTP, please try again.'})
+    
+    return render(request, 'confirm_otp.html')

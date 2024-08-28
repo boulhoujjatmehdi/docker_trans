@@ -44,8 +44,11 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     'main',
-
     'googleauth',
+
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'qrcode',
 
 
 ]

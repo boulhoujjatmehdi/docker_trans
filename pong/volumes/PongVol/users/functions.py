@@ -22,3 +22,9 @@ def gen_token(user):
         savetoken.user_id = user
         savetoken.save()
         return token
+    
+
+
+
+
+

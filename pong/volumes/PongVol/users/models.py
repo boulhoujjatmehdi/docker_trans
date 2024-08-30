@@ -11,6 +11,7 @@ class User(AbstractUser):
     password = models.CharField(max_length=255)
     username = models.CharField(max_length=255, unique=True, default='default_name')
     last_seen = models.DateTimeField(null=True, blank=True)
+    twoFA = models.BooleanField(default=False)
     
 
     USERNAME_FIELD = 'username'
@@ -25,8 +26,6 @@ class User(AbstractUser):
             return timezone.now()
         else:
             return False
-    
-
 
 class TokensCustom(models.Model):
     token = models.TextField()
@@ -52,50 +51,3 @@ class TokensCustom(models.Model):
         TokensCustom.objects.filter(expires_at__lt = timezone.now() , user_id = user).delete()
         pass
 
-import qrcode
-from io import BytesIO
-from django.core.files.base import ContentFile
-from django_otp.models import Device
-from django_otp.plugins.otp_totp.models import TOTPDevice
-
-
-
-
-
-def create_totp_device(user):
-    totp_device , created = TOTPDevice.objects.get_or_create(user=user, confirmed=False)
-    if created:
-        totp_device.generate_challenge()
-    return totp_device
-
-
-
-def generate_qr_code(totp_device):
-    qr_url = totp_device.config_url
-    qr_image = qrcode.make(qr_url)
-    buffer = BytesIO()
-    qr_image.save(buffer, "PNG")
-    qr_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
-    return qr_base64
-
-import urllib.parse
-from django_otp.plugins.otp_totp.models import TOTPDevice
-import base64
-
-# def generate_qr_code(user):
-#     totp_device = TOTPDevice.objects.create(user=user, confirmed=False)
-#     totp_device.generate_challenge()
-
-#     issuer = 'users'
-#     label = f"{issuer}:{user.username}"
-#     url = f"otpauth://totp/{urllib.parse.quote(label)}?secret={totp_device.bin_key}&issuer={urllib.parse.quote(issuer)}"
-
-#     # Generate the QR code from this URL
-#     qr = qrcode.make(totp_device.config_url)
-#     buffer = BytesIO()
-#     qr.save(buffer, "PNG")
-    
-#     # Encode the QR code image to base64
-#     qr_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
-    
-#     return qr_base64

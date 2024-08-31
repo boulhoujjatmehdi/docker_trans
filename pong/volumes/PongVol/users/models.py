@@ -1,4 +1,4 @@
-from django.db import models, IntegrityError
+from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
 
@@ -32,7 +32,7 @@ class TokensCustom(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    retired = models.BooleanField(default=False)
+    retired = models.BooleanField(default=False)# //TODO: check if needed 
 
 
     def is_valid(self):
@@ -49,5 +49,4 @@ class TokensCustom(models.Model):
     @staticmethod
     def delete_expired_tokens(user):
         TokensCustom.objects.filter(expires_at__lt = timezone.now() , user_id = user).delete()
-        pass
 

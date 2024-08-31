@@ -126,15 +126,6 @@ def confirm_otp(request):
             totp_device = TOTPDevice.objects.get(user = user)
         
             if totp_device.verify_token(otp):
-                # totp_device.confirmed = True
-                jwtToken = request.COOKIES.get('jwt')
-                tok = TokensCustom.objects.filter(token = jwtToken).first()
-                if tok:
-                    tok.retired = True
-                    tok.save()
-
-                messages.success(request, 'OTP setup successful.')
-                # return JsonResponse({"message":"sucessfully confirmed one time password"})
                 response = HttpResponseRedirect('/dashboard')
                 token = gen_token(user)
                 response.set_cookie('jwt', value=token, httponly=True)

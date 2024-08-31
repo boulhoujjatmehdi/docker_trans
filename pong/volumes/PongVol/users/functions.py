@@ -21,7 +21,6 @@ def gen_token(user):
         savetoken.created_at = datetime.datetime.fromtimestamp(decoded['iat'])
         savetoken.expires_at = datetime.datetime.fromtimestamp(decoded['exp'])
         savetoken.user_id = user
-        savetoken.retired = True
         savetoken.save()
         return token
     

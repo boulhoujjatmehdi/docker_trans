@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from django.utils.deprecation import MiddlewareMixin
 from django.contrib.auth.models import AnonymousUser
 from .models import TokensCustom
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 
 User = get_user_model()
 class JWTAuthenticationMiddleware(MiddlewareMixin):

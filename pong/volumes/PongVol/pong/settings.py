@@ -28,6 +28,10 @@ DEBUG = True
 ALLOWED_HOSTS = ["pong", "localhost"]
 
 
+PING_PONG_UID = 'u-s4t2ud-6f00f915a8502d3af9d46351766176e32619718d006f2088cc14307c7efbbb8e'
+PING_PONG_SECRET = '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'
+
+
 
 INSTALLED_APPS = [
     'allauth',

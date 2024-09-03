@@ -32,7 +32,6 @@ class TokensCustom(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    retired = models.BooleanField(default=False)# //TODO: check if needed 
 
 
     def is_valid(self):

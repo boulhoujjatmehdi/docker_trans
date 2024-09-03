@@ -28,9 +28,8 @@ export default class Dashboard extends HTMLElement {
             </div>
             <div class="main">
                 <div class="header-bar">
-                    <div class="header-name">
-                        <h2 >Hi, </h2>
-                        <h2 id="user_name"></h2>
+                    <div id="user_name" class="header-name">
+
                     </div>
                     <input class="header-search" type="text" placeholder="Search For Friends">
                     <div class="header-notifications">

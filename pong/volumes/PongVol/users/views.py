@@ -3,11 +3,13 @@ from .serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from django.db import IntegrityError
-from .models import User
+from .models import User, verification_code
 import jwt, datetime
 from django.middleware.csrf import get_token
 from django.http import JsonResponse
 from .functions import gen_token, gen_token_otp
+from django.conf import settings
+
 
 class RegisterView(APIView):
     def post(self, request):
@@ -54,7 +56,7 @@ class UserView(APIView):
         if not token:
             raise AuthenticationFailed("unauthenticated")
         try:
-            payload =jwt.decode(token, 'secret', algorithms=['HS256'])
+            payload =jwt.decode(token, settings.JWT_SECRET, algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
             AuthenticationFailed('unauthenticated')
 
@@ -136,3 +138,29 @@ def confirm_otp(request):
             return JsonResponse({"message":"Please try again"})
     
     return render(request, 'confirm_otp.html')
+
+
+from .emailing import Emailing
+from .decorators import auth_only
+
+
+@auth_only
+def send_mail(request):
+    email = Emailing(request.user.email)
+    if email.send_mail():
+        return render(request, "verify_email.html")
+    else:
+        return JsonResponse({"message":"error at sending"})
+
+import json
+def change_pass(request):
+    data = json.loads(request.body)
+    try:
+        ver_code = verification_code.objects.get(email = request.user.email, code = data['code'])
+        if not ver_code.is_valid():
+            raise Exception("verification code is not valid check timestaps and ")
+    except:
+        return JsonResponse({"message":"exception raised", 'code':data['code'], 'passcode': data['new_password']} )
+
+
+    return JsonResponse({"message":"sucess", 'code':data['code'], 'passcode': data['new_password']} )

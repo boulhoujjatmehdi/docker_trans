@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterView , LoginView, UserView, LogoutView, csrf_token_view, data_to_only_logged_users, enable_otp, confirm_otp
+from .views import RegisterView , LoginView, UserView, LogoutView, csrf_token_view, data_to_only_logged_users, enable_otp, confirm_otp, change_pass
 from .oauth import oauth42
 urlpatterns = [
     path('register/', RegisterView.as_view()),
@@ -11,5 +11,6 @@ urlpatterns = [
     path("42/callback/", oauth42.as_view()),
     path("otp/qrcode/", enable_otp),
     path("otp/confirm", confirm_otp),
+    path("change-pass/", change_pass),
 
 ]

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+from decimal import localcontext
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,9 +29,35 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["pong", "localhost"]
 
+PING_PONG_UID = config('PING_PONG_UID')
+PING_PONG_SECRET = config('PING_PONG_SECRET')
 
-PING_PONG_UID = 'u-s4t2ud-6f00f915a8502d3af9d46351766176e32619718d006f2088cc14307c7efbbb8e'
-PING_PONG_SECRET = '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'
+GOOGLE_CLIENT_ID = config('GOOGLE_CLIENT_ID')
+GOOGLE_CLIENT_SECRET = config('GOOGLE_CLIENT_SECRET')
+
+JWT_SECRET = config('JWT_SECRET')
+
+
+# EMAILING SETTINGS
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# SMTP server settings
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM = 'boulhoujjatmehdi@gmail.com'
+EMAIL_HOST_USER = 'boulhoujjatmehdi@gmail.com'    # Your SMTP email
+EMAIL_HOST_PASSWORD = 'ltqojbwulvmudhub' 
+EMAIL_PORT = 587                       # For TLS use 587, for SSL use 465
+EMAIL_USE_TLS = True                   # True for TLS (recommended), False if using SSL
+
+PASSWORD_RESET_TIMEOUT = 14400 # //TODO: CHECK IF THIS NECESSARY, its more likely that its not.-_-
+
+# Default "from" address for emails
+# DEFAULT_FROM_EMAIL = 'webmaster@yourdomain.com'
+
+# Email subject prefix (useful for identifying emails from your site)
+# EMAIL_SUBJECT_PREFIX = '[Your Website] '
+
 
 
 
@@ -167,9 +195,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.User'
 
 CORS_ALLOW_CREDENTIALS= True
-CORS_ORIGIN_ALLOW_ALL= True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080"
+]
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8080/']
+# CSRF_TRUSTED_ORIGINS = ['http://localhost:8090/'] //TODO CHECK IF NOT A PROBLEM TO REMOVE THIS
 
 
 AUTHENTICATION_BACKENDS = (

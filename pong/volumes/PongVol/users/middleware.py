@@ -7,6 +7,7 @@ from django.contrib.auth.models import AnonymousUser
 from .models import TokensCustom
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
+from django.conf import settings
 
 User = get_user_model()
 class JWTAuthenticationMiddleware(MiddlewareMixin):
@@ -20,7 +21,7 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):
                     
                     if not tok or not tok.is_valid():
                         raise jwt.ExpiredSignatureError
-                    payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+                    payload = jwt.decode(token, settings.JWT_SECRET, algorithms=['HS256'])
                     user_id = payload.get('id')
                     user = User.objects.get(id=user_id)
                     request.user = user

@@ -312,6 +312,7 @@ dash-page{
 
 [class^="leader-name-rank"]{
     width: 50%;
+    padding-left: 3%;
     display: flex;
     justify-content: space-between;
     align-items: center;

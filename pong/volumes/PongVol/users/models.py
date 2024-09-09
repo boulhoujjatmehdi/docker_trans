@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
-
+from datetime import timedelta
 
 # Create your models here.
 
@@ -12,6 +12,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=255, unique=True, default='default_name')
     last_seen = models.DateTimeField(null=True, blank=True)
     twoFA = models.BooleanField(default=False)
+    
     
 
     USERNAME_FIELD = 'username'
@@ -49,3 +50,19 @@ class TokensCustom(models.Model):
     def delete_expired_tokens(user):
         TokensCustom.objects.filter(expires_at__lt = timezone.now() , user_id = user).delete()
 
+import random
+import string
+class verification_code(models.Model):
+    email = models.EmailField()
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            verification_code.objects.filter(email = self.email).delete()
+        super().save(*args, **kwargs)
+
+
+    def is_valid(self):
+        return self.created_at >= timezone.now() - timedelta(minutes=10)
+    

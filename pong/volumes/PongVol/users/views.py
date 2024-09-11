@@ -3,12 +3,17 @@ from .serializers import UserSerializer
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from django.db import IntegrityError
-from .models import User, verification_code
-import jwt, datetime
+from .models import User, verification_code, TokensCustom
+import jwt, json
 from django.middleware.csrf import get_token
-from django.http import JsonResponse
-from .functions import gen_token, gen_token_otp
+from django.http import JsonResponse, HttpResponseRedirect
+from .functions import gen_token, gen_token_otp, create_totp_device, generate_qr_code, verify_token_otp
 from django.conf import settings
+from .decorators import auth_only
+from .emailing import Emailing
+from .mixins import AuthRequired
+from django.shortcuts import render
+from django_otp.plugins.otp_totp.models import TOTPDevice
 
 
 class RegisterView(APIView):
@@ -19,12 +24,13 @@ class RegisterView(APIView):
             serializer.save()
         except IntegrityError as e:
             return Response({"detail": str(e)}, 401)    
-        # except Exception as e:
-        #     return Response({"detail": "Error at sign up!"}, 401)
+
         return Response({"detail": "Sucessfully signed up"})
 
 class LoginView(APIView):
     def post(self, request):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect("/dashboard")
         email = request.data['email']
         password =request.data['password']
         user = User.objects.filter(email=email).first()
@@ -50,7 +56,8 @@ class LoginView(APIView):
         response.set_cookie(key='jwt',value=token, httponly=True)
         return response
 
-class UserView(APIView):
+class UserView(AuthRequired,  APIView):
+    #//TODO: THIS IS NOT NECESSARY REMOVE IT
     def get(self, request):
         token = request.COOKIES.get('jwt')
         if not token:
@@ -63,9 +70,9 @@ class UserView(APIView):
         user = User.objects.filter(id=payload['id']).first()
         serializer = UserSerializer(user)
         return Response(serializer.data)
-from .models import TokensCustom
-from django.http import HttpResponseRedirect
-class LogoutView(APIView):
+
+
+class LogoutView(AuthRequired, APIView):
     def post(self, request):
         tok = TokensCustom.objects.filter(token = request.COOKIES.get('jwt')).first()
         if tok:
@@ -86,25 +93,6 @@ def csrf_token_view(request):
 
 
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-
-
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-def data_to_only_logged_users(request):
-    # if request.user:
-    return JsonResponse({'message':"message for only logged on users that have the permition"})
-    # return JsonResponse({'message':"failed in the login check"})
-
-
-
-
-
-from django.shortcuts import render
-from .models import User
-from .functions import create_totp_device, generate_qr_code
-
 def enable_otp(request):
     totp_device = create_totp_device(request.user)
     qr_code = generate_qr_code(totp_device)
@@ -112,10 +100,6 @@ def enable_otp(request):
 
 
 
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django_otp.plugins.otp_totp.models import TOTPDevice
-from .functions import verify_token_otp
 
 def confirm_otp(request):
     if request.method == 'POST':
@@ -140,10 +124,8 @@ def confirm_otp(request):
     return render(request, 'confirm_otp.html')
 
 
-from .emailing import Emailing
-from .decorators import auth_only
 
-
+from django.http import HttpResponse
 @auth_only
 def send_mail(request):
     email = Emailing(request.user.email)
@@ -152,15 +134,19 @@ def send_mail(request):
     else:
         return JsonResponse({"message":"error at sending"})
 
-import json
+@auth_only
 def change_pass(request):
     data = json.loads(request.body)
     try:
         ver_code = verification_code.objects.get(email = request.user.email, code = data['code'])
         if not ver_code.is_valid():
             raise Exception("verification code is not valid check timestaps and ")
-    except:
-        return JsonResponse({"message":"exception raised", 'code':data['code'], 'passcode': data['new_password']} )
+        
+        userUpdate = request.user
+        userUpdate.set_password(data['new_password'])
+        userUpdate.save()
+        ver_code.delete()
+    except :
+        return JsonResponse({ "ok":False, "message":"Something went wrong!"} )
 
-
-    return JsonResponse({"message":"sucess", 'code':data['code'], 'passcode': data['new_password']} )
+    return JsonResponse({"ok": True, "message":"sucess!"} )

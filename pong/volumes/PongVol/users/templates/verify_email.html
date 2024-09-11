@@ -120,12 +120,14 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
+                if (data.ok)
+                {
                     messageElement.className = 'success';
                     messageElement.innerText = 'Password reset successfully!';
-                } else {
+                }
+                else{
                     messageElement.className = 'error';
-                    messageElement.innerText = 'Error: ' + data.message;
+                   messageElement.innerText = 'Error: ' + data.message; 
                 }
             })
             .catch(error => {

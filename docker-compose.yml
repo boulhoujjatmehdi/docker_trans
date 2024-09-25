@@ -64,19 +64,19 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /Users/eboulhou/Desktop/docker_trans/pong/volumes/PongVol
+      device: /Users/${USER}/Desktop/ayac/pong/volumes/PongVol
       o: bind
   DatabaseVol:
     driver: local
     driver_opts:
       type: none
-      device: /Users/eboulhou/Desktop/docker_trans/pong/volumes/DatabaseVol
+      device: /Users/${USER}/Desktop/ayac/pong/volumes/DatabaseVol
       o: bind
   FrontVol:
     driver: local
-    driver_opts:
+    driver_opts: 
       type: none
-      device: /Users/eboulhou/Desktop/docker_trans/frontend/FrontVol
+      device: /Users/${USER}/Desktop/ayac/frontend/FrontVol
       o: bind
 
 
@@ -104,7 +104,7 @@ networks:
 #     container_name: userapi
 #     restart: always
 #     ports:
-#       - 8001:8000
+#       - 8001:800042 -docker
 #     depends_on:
 #       - db
 
@@ -133,21 +133,21 @@ networks:
 #     driver: local
 #     driver_opts:
 #       type: none
-#       device: /Users/eboulhou/Desktop/docker_trans/volumes/gateway
+#       device: /Users/eboulhou/Desktop/back-end/volumes/gateway
 #       o: bind
 
 #   vol_user_api:
 #     driver: local
 #     driver_opts:
 #       type: none
-#       device: /Users/eboulhou/Desktop/docker_trans/volumes/user_api
+#       device: /Users/eboulhou/Desktop/back-end/volumes/user_api
 #       o: bind
 
 #   vol_db:
 #     driver: local
 #     driver_opts:
 #       type: none
-#       device: /Users/eboulhou/Desktop/docker_trans/volumes/db
+#       device: /Users/eboulhou/Desktop/back-end/volumes/db
 #       o: bind
 
 

@@ -1,6 +1,46 @@
 
 export default class Dashboard extends HTMLElement {
-    constructor() {super()}
+    constructor() {
+        super()
+        this.userData = null
+    }
+
+    async  fetchCsrfToken() {
+        const response = await fetch('/api/csrf-token/', {
+            credentials: 'include'
+        });
+        const data = await response.json();
+        return data.csrfToken;
+    }
+
+    getCookie(name) {
+        var cookieArr = document.cookie.split(";");
+
+        for(var i = 0; i < cookieArr.length; i++) {
+            var cookiePair = cookieArr[i].split("=");
+
+            if(name == cookiePair[0].trim()) {
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+
+        return null;
+    }
+    logout_post()
+    {
+        var csrfToken = this.getCookie("csrf-token");
+        fetch("http://localhost:8000/api/logout/", {
+            method: 'post',
+            credentials: 'include',
+            headers:{
+                'X-CSRFToken':csrfToken
+            }
+        })
+        .then(() =>{
+            window.location.href = "/login";
+        })
+        .catch(error => console.log("error", error));
+    }
     connectedCallback() {
         this.innerHTML = `
                 <head>
@@ -9,27 +49,32 @@ export default class Dashboard extends HTMLElement {
                 </head>
         <div class="container" id="dashboardid">
             <div class="side-panel">
-                 <img src="../images/Logo.svg" class="logo">
+                <a href="/dashboard" class="logo" data-link>
+					<img src="../images/Logo.svg">
+				<a>
                 <div class="nav-options" >
                     <a href="/dashboard" class="btn-option flex-center btn-simple btn-highlight nav__link"  data-link>
                         <img src="../images/Home.svg">
                     </a>
                 
-                    <a href="/dashboard/game" class="btn-option flex-center btn-simple  nav__link"  data-link>
+                    <a href="/dashboard/tournament" class="btn-option flex-center btn-simple  nav__link"  data-link>
                         <img  src="../images/Users.svg">
                     </a>
                     <a href="/dashboard/chat" class="btn-option flex-center btn-simple  nav__link" data-link>
                         <img src="../images/Sms.svg">
                     </a>
+					<a href="/dashboard/settings" class="btn-option flex-center btn-simple  nav__link" data-link>
+                        <img src="../images/Settings.svg">
+                    </a>
                 </div> 
-                <button data-link  class="nav__link logout flex-center" onclick="logout_post()">
+                <button  id="logout_btn"  class="nav__link logout flex-center" >
                     <img src="../images/Logout.svg">
                 </button>
             </div>
             <div class="main">
                 <div class="header-bar">
                     <div id="user_name" class="header-name">
-
+                        
                     </div>
                     <input class="header-search" type="text" placeholder="Search For Friends">
                     <div class="header-notifications">
@@ -38,15 +83,15 @@ export default class Dashboard extends HTMLElement {
                     </div>
                 </div>
                 <div class="center-console" id="dashscripte">
-                
+                 
 
 
                 </div>
             </div>
             <div class="right-side-panel">
                  <div class="upper-section">
-                    <div class="profile-photo">
-                        <img src="../images/image_42.png">
+                    <div  class="profile-photo">
+                        <img id="proPhoto" src="">
                     </div>
                     <img class="upper-section-icone" src="../images/Vector.svg">
                     <div class="users-display overflow-style flex-col">
@@ -138,9 +183,19 @@ export default class Dashboard extends HTMLElement {
         }
         </script>
         `;
-
-
-        // changing the highligth of buttons
+        fetch('http://localhost:8000/main/data/',{
+            method:"get",
+            credentials:"include"
+            }).then(response => response.json())
+            .then(data => {
+                document.getElementById("user_name").innerHTML = data.user_name;
+                document.getElementById("proPhoto").src = '';
+                document.getElementById("proPhoto").src = '/api/profile-img/';
+                
+                this.userData = data;
+            })
+            
+        
         var buttons = document.querySelectorAll(".btn-option");
         buttons.forEach(function(btn){
             btn.addEventListener('click', function(){
@@ -153,60 +208,8 @@ export default class Dashboard extends HTMLElement {
             });
         });
 
-
-
-        function getCookie(name) {
-            var cookieArr = document.cookie.split(";");
-
-            for(var i = 0; i < cookieArr.length; i++) {
-                var cookiePair = cookieArr[i].split("=");
-
-                if(name == cookiePair[0].trim()) {
-                    return decodeURIComponent(cookiePair[1]);
-                }
-            }
-
-            return null;
-        }
-
-        function logout_post()
-        {
-
-            var csrfToken = getCookie("csrf-token");
-            fetch("http://localhost:8000/api/logout/", {
-                method: 'post',
-                credentials: 'include',
-                headers:{
-                    'X-CSRFToken':csrfToken
-                }
-            })
-            .then(() =>{
-                window.location.href = "/login";
-            })
-            .catch(error => console.log("error", error));
-        }
-
-        fetch('http://localhost:8000/main/data/',{
-            method:"get",
-            credentials:"include"
-        })
-        .then(response => response.json())
-        .then(data => {
-                document.getElementById('user_name').innerHTML = data.user_name;
-        })
-
-
-
-
-        async function fetchCsrfToken() {
-            const response = await fetch('/api/csrf-token/', {
-                credentials: 'include'
-            });
-            const data = await response.json();
-            return data.csrfToken;
-        }
-
-        fetchCsrfToken().then(csrfToken => {
+        document.getElementById("logout_btn").onclick =  (e) => this.logout_post(e);
+        this.fetchCsrfToken().then(csrfToken => {
             document.querySelector('meta[name="csrf-token"]').setAttribute('content', csrfToken);
         });        
     }

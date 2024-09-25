@@ -469,3 +469,7 @@ dash-page{
 
 /* -----picker 1-------- */
 
+.blurred-background {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+}

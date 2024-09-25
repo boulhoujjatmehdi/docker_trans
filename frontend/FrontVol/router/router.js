@@ -1,16 +1,17 @@
-
-
 import Dashboard from "../views/dashboard.js";
 import Error404 from "../views/404.js";
 import Chat from "../views/chat.js";
 import Contact from "../views/contact.js";
 import Dash from "../views/dash.js";
 import Game from "../views/game.js";
+import Tournament from "../views/tournament.js";
+import Online_Game from "../views/online-game.js";
+import Online_Popup from "../views/online-popup.js";
 import Home from "../views/home.js";
 import Login from "../views/login.js";
 import Loading from "../views/loading.js";
 import OTP from "../views/otp.js"
-
+import Settings from "../views/settings.js";
 
 
 export const Routes = [
@@ -39,20 +40,6 @@ export const Routes = [
         component: Contact,
         auth: false
     },
-    // {
-    //     path: '/dashboard',
-    //     component: Dash,
-    //     children: [
-    //         {
-    //             path: '/chat',
-    //             component: Chat
-    //         },
-    //         {
-    //             path: '/game',
-    //             component: Game
-    //         }
-    //     ]
-    // }
     {
         path: '/dashboard',
         component: Dash,
@@ -69,12 +56,26 @@ export const Routes = [
         auth: true
     },
     {
+        path: '/dashboard/online-game',
+        component: Online_Game,
+        auth: true
+    },
+    {
+        path: '/dashboard/tournament',
+        component: Tournament,
+        auth: true
+    },
+    {
+        path: '/dashboard/settings',
+        component: Settings,
+        auth: true
+    },
+    {
         path: '/loading',
         component: Loading,
         auth: false
     },
-    
-]
+];
 
 class Router {
     constructor() {
@@ -189,4 +190,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     router.navigate(window.location.pathname);
 });
-

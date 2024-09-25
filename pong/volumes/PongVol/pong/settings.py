@@ -46,7 +46,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_FROM = 'boulhoujjatmehdi@gmail.com'
 EMAIL_HOST_USER = 'boulhoujjatmehdi@gmail.com'    # Your SMTP email
-EMAIL_HOST_PASSWORD = 'ltqojbwulvmudhub' 
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587                       # For TLS use 587, for SSL use 465
 EMAIL_USE_TLS = True                   # True for TLS (recommended), False if using SSL
 
@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'daphne',
     'channels',
     'chat',
+	'settings',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,6 +77,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     'main',
+	'game',
+
     'googleauth',
 
     'django_otp',

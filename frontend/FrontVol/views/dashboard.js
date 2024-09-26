@@ -76,10 +76,6 @@ export default class Dashboard extends HTMLElement {
                     <div id="user_name" class="header-name">
                         
                     </div>
-                    <div class="mehdi">
-                        <input class="header-searc" type="text" placeholder="Search For Friends">
-                        
-                    </div>
                     
                     <div class="header-notifications">
                         <div class="notifications-widget"></div>

@@ -3,7 +3,7 @@ import OnlinePopup from './online-popup.js';
 export default class Dash extends HTMLElement {
     constructor() {super()}
     connectedCallback() {
-        this.innerHTML = `
+        this.innerHTML = /*html*/ `
         <html lang="en">
         <head>
             <meta charset="UTF-8">
@@ -48,8 +48,25 @@ export default class Dash extends HTMLElement {
         <div class="div3"> 
 
         </div>
-        <div class="div4">
-
+        <div class="search-board">
+            <div class="search-bar">
+            <input class="search-input" placeholder="Friends" maxlength="30" >
+            </div>
+            <div class="search-result-board">
+                <div class="search-result-user">
+                    <div class="search-user-name">mehdiboulhoujjat1</div>
+                    <button id="follow-btn" value="1"> Follow </button>
+                </div>
+                <div class="search-result-user">
+                    <div class="search-user-name">mehdiboulhoujjat2</div>
+                    <button id="follow-btn" value="2"> Follow </button>
+                </div>
+                <div class="search-result-user">
+                    <div class="search-user-name">mehdiboulhoujjat3</div>
+                    <button id="follow-btn" value="3"> Follow </button>
+                </div>
+            </div>
+            
         </div>
         <div class="leader-board">
             <div class="leader-board_div">
@@ -144,6 +161,22 @@ export default class Dash extends HTMLElement {
 		    document.body.appendChild(popup);
 		    popup.openModal();
 		});
+
+        let searchInput = document.querySelector('.search-input');
+        searchInput.addEventListener('input', (event) => {
+            // console.log(event.target.value);
+            let searchingString = event.target.value;
+            if (searchingString.trim() !== "")
+            {
+                fetch(`/api/search/${searchingString}`, {
+                    method: 'GET',
+                })
+                .then(response => response.json)
+                .then(data => {
+                    console.log(data);
+                })
+            }
+        })
     }
 }
 

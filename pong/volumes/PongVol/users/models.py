@@ -13,7 +13,7 @@ class User(AbstractUser):
     last_seen = models.DateTimeField(null=True, blank=True)
     twoFA = models.BooleanField(default=False)
 
-    avatar = models.ImageField(upload_to='avatars/', default="1_men.svg")
+    avatar = models.ImageField(upload_to='avatars/', default="avatars/default.jpg")
     
     
 

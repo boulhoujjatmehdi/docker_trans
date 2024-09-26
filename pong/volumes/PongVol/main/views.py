@@ -53,3 +53,17 @@ def DataView(request):
         'username': username,
     })
     return data
+
+
+@auth_only
+def UsersSearch(request, search_string):
+    pass
+
+from rest_framework import generics
+from django.db.models import Q
+class SearchForUser(generics.ListAPIView):
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        search_string = self.kwargs['search_string']
+        return User.objects.filter(Q(username__icontains=search_string))

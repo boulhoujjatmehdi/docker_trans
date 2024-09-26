@@ -43,9 +43,6 @@ def DataView(request):
     first_name = request.user.first_name
     last_name = request.user.last_name
     username = request.user.username
-    if request.user.avatar and hasattr(request.user.avatar, 'url'):
-        avatar_url = request.user.avatar.url
-    avatar = request.user.avatar
     data = JsonResponse({
         'message':'message from DataView',
         'user_name': username,
@@ -54,6 +51,5 @@ def DataView(request):
         'first_name': first_name,
         'last_name': last_name,
         'username': username,
-        'avatar': avatar_url,
     })
     return data

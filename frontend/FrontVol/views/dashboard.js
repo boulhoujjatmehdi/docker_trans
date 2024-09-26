@@ -42,7 +42,7 @@ export default class Dashboard extends HTMLElement {
         .catch(error => console.log("error", error));
     }
     connectedCallback() {
-        this.innerHTML = `
+        this.innerHTML = /*html*/`
                 <head>
                     <link rel="stylesheet" href="../style/dashboard.css">
                     <meta name="csrf-token" content="">
@@ -76,7 +76,11 @@ export default class Dashboard extends HTMLElement {
                     <div id="user_name" class="header-name">
                         
                     </div>
-                    <input class="header-search" type="text" placeholder="Search For Friends">
+                    <div class="mehdi">
+                        <input class="header-searc" type="text" placeholder="Search For Friends">
+                        
+                    </div>
+                    
                     <div class="header-notifications">
                         <div class="notifications-widget"></div>
                         <div class="notifications-widget"></div>

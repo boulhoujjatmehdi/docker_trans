@@ -5,6 +5,7 @@ from users.models import User
 from django.utils import timezone
 from users.serializers import UserSerializer
 from users.decorators import auth_only
+from users.friends import friends
 # Create your views here.
 
 
@@ -66,4 +67,4 @@ class SearchForUser(generics.ListAPIView):
 
     def get_queryset(self):
         search_string = self.kwargs['search_string']
-        return User.objects.filter(Q(username__icontains=search_string))
+        return User.objects.filter(username__icontains=search_string)

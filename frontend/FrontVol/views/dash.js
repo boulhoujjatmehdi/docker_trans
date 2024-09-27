@@ -153,6 +153,10 @@ export default class Dash extends HTMLElement {
         </html>
         `;
 
+        // - GET THE DATA NEEDED FOR THE DASHBOARD -//
+        // fetch('/api/')
+
+
 		let picker = document.querySelector('.picker-3');
 
 		picker.addEventListener('click', () => {
@@ -163,20 +167,47 @@ export default class Dash extends HTMLElement {
 		});
 
         let searchInput = document.querySelector('.search-input');
+        let searchResultUsers = document.querySelectorAll('.search-result-user');
         searchInput.addEventListener('input', (event) => {
             // console.log(event.target.value);
             let searchingString = event.target.value;
+
             if (searchingString.trim() !== "")
             {
-                fetch(`/api/search/${searchingString}`, {
-                    method: 'GET',
-                })
-                .then(response => response.json)
+                fetch(`/api/search/${searchingString}`)
+                .then(response => response.json())
                 .then(data => {
                     console.log(data);
+                    var i = 0;
+                    searchResultUsers.forEach((elem)=>{
+                        if(data[i]){
+
+                            elem.innerHTML = /*html*/`
+                            <div class="search-user-name">${data[i].username}</div>
+                            <button id="follow-btn" value="${data[i].id}"> Follow </button>
+                            `;
+                        }
+                        else
+                            elem.innerHTML = "";
+                        i++;
+                        
+                    });
+                    let butns = document.querySelectorAll('#follow-btn')
+                    butns.forEach(function(btn){
+                        btn.addEventListener('click', (event)=>{
+                            fetch(`/api/relations/send-friendship/${btn.value}`)
+                            .then(response => response.json())
+                            .then(data =>{
+                                
+                            })
+                        })
+                    });
+
+
                 })
             }
         })
+        
     }
 }
 

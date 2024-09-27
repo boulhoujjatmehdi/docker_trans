@@ -68,3 +68,4 @@ class verification_code(models.Model):
     def is_valid(self):
         return self.created_at >= timezone.now() - timedelta(minutes=10)
     
+    # from .friends import friends

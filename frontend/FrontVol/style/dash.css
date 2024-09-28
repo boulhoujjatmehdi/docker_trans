@@ -402,10 +402,11 @@ dash-page{
     width: 100%;
     height: 100%;
     background-color: #067D71;
-    border: 0;
+    border:none;
     border-radius: 2.7rem;
     text-align: center;
     font-size: 1.8rem;
+    outline: none;
 }
 
 .search-result-board{

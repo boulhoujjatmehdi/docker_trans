@@ -189,8 +189,7 @@ export default class Dashboard extends HTMLElement {
             }).then(response => response.json())
             .then(data => {
                 document.getElementById("user_name").innerHTML = data.user_name;
-                document.getElementById("proPhoto").src = '';
-                document.getElementById("proPhoto").src = '/api/profile-img/';
+                document.getElementById("proPhoto").src = data.avatar_url;
                 
                 this.userData = data;
             })

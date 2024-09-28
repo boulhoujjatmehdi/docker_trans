@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils import timezone
@@ -13,7 +14,7 @@ class User(AbstractUser):
     last_seen = models.DateTimeField(null=True, blank=True)
     twoFA = models.BooleanField(default=False)
 
-    avatar = models.ImageField(upload_to='avatars/', default="avatars/default.jpg")
+    avatar = models.ImageField(upload_to='static/images/profiles/', default=settings.DEFUALT_PROFILE_IMG)
     
     
 

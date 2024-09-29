@@ -50,7 +50,8 @@ export default class Dash extends HTMLElement {
         </div>
         <div class="search-board">
             <div class="search-bar">
-            <input class="search-input" placeholder="Friends" maxlength="30" >
+                <input  class="search-input" placeholder="Search" maxlength="30" >
+                <button class="friends-accept-list">Requests</button>
             </div>
             <div class="search-result-board">
                 <div class="search-result-user">
@@ -155,7 +156,19 @@ export default class Dash extends HTMLElement {
 
         // - GET THE DATA NEEDED FOR THE DASHBOARD -//
         // fetch('/api/')
+        let searchInput = document.querySelector(".search-input");
+        let friendsRequests = document.querySelector(".friends-accept-list");
+        searchInput.addEventListener("click", ()=>{
+            friendsRequests.style.width = "30%";
+            searchInput.style.width = "70%";
+        })
+        friendsRequests.addEventListener("click", ()=>{
+            friendsRequests.style.width = "70%";
+            searchInput.style.width = "30%";
 
+            
+            
+        })
 
 		let picker = document.querySelector('.picker-3');
 
@@ -166,7 +179,6 @@ export default class Dash extends HTMLElement {
 		    popup.openModal();
 		});
 
-        let searchInput = document.querySelector('.search-input');
         let searchResultUsers = document.querySelectorAll('.search-result-user');
         searchInput.addEventListener('input', (event) => {
             // console.log(event.target.value);
@@ -192,9 +204,9 @@ export default class Dash extends HTMLElement {
                         i++;
                         
                     });
-                    let butns = document.querySelectorAll('#follow-btn')
+                    let butns = document.querySelectorAll('#follow-btn');
                     butns.forEach(function(btn){
-                        btn.addEventListener('click', (event)=>{
+                        btn.addEventListener('click', ()=>{
                             fetch(`/api/relations/send-friendship/${btn.value}`)
                             .then(response => response.json())
                             .then(data =>{
@@ -202,8 +214,6 @@ export default class Dash extends HTMLElement {
                             })
                         })
                     });
-
-
                 })
             }
         })

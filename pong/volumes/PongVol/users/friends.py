@@ -4,6 +4,8 @@ from pyexpat import model
 from typing_extensions import ReadOnly
 from django.db import models
 from django.dispatch import receiver
+
+from users.decorators import auth_only
 from .models import User
 from rest_framework import serializers
 from .serializers import UserSerializer
@@ -34,6 +36,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
+@auth_only
 @api_view(["GET"])
 def send_friendship_request(request, target_id):
     try:
@@ -49,6 +52,7 @@ def send_friendship_request(request, target_id):
     except User.DoesNotExist:
         return Response({"error":"you're not supposed to do that!"}, status=status.HTTP_400_BAD_REQUEST)
 
+@auth_only
 @api_view(['GET'])
 def accept_friendship_request(request, target_id):
     try:
@@ -63,13 +67,15 @@ def accept_friendship_request(request, target_id):
 
     except (User.DoesNotExist, Exception):
         return Response({"error":"you're not supposed to do that!"}, status=status.HTTP_400_BAD_REQUEST)
-    
-    
-    
-    
+
+
+
+class RequestsOnWait(APIView):
     
     pass
 
 def block_user (self, request):
     pass
+
+
 

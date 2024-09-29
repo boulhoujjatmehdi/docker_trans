@@ -1,3 +1,4 @@
+from django.dispatch import receiver
 from django.shortcuts import render, redirect
 from django.http.response import JsonResponse
 from django.template.loader import render_to_string
@@ -6,6 +7,9 @@ from django.utils import timezone
 from users.serializers import UserSerializer
 from users.decorators import auth_only
 from users.friends import friends
+from rest_framework import generics
+from users.mixins import AuthRequired
+
 # Create your views here.
 
 
@@ -34,6 +38,7 @@ def GameView(request):
     css = 'static/css/game.css'
     js = 'static/js/game.js'
     return JsonResponse({'content':string, 'css': css, 'js': js})
+    
 
 
 @auth_only
@@ -62,11 +67,16 @@ def DataView(request):
 def UsersSearch(request, search_string):
     pass
 
-from rest_framework import generics
-from django.db.models import Q
-class SearchForUser(generics.ListAPIView):
+from django.db.models import Q 
+class SearchForUser(AuthRequired, generics.ListAPIView):
     serializer_class = UserSerializer
 
     def get_queryset(self):
         search_string = self.kwargs['search_string']
-        return User.objects.filter(username__icontains=search_string)
+        return User.objects.filter(Q(username__icontains=search_string) & ~Q(id = self.request.user.id))[:3]
+
+from users.friends import friendsSerializer
+class RequestsOnWait(AuthRequired, generics.ListAPIView):
+    serializer_class = friendsSerializer
+    def get_queryset(self):
+        return friends.objects.filter(receiver = self.request.user)

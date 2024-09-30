@@ -54,17 +54,19 @@ export default class Dash extends HTMLElement {
                 <button class="friends-accept-list">Requests</button>
             </div>
             <div class="search-result-board">
-                <div class="search-result-user">
-                    <div class="search-user-name">mehdiboulhoujjat1</div>
-                    <button id="follow-btn" value="1"> Follow </button>
-                </div>
-                <div class="search-result-user">
-                    <div class="search-user-name">mehdiboulhoujjat2</div>
-                    <button id="follow-btn" value="2"> Follow </button>
-                </div>
-                <div class="search-result-user">
-                    <div class="search-user-name">mehdiboulhoujjat3</div>
-                    <button id="follow-btn" value="3"> Follow </button>
+                <div class="search-result-board-overflow">
+                    <div class="search-result-user">
+                        <div class="search-user-name">mehdiboulhoujjat1</div>
+                        <button id="follow-btn" value="1"> Follow </button>
+                    </div>
+                    <div class="search-result-user">
+                        <div class="search-user-name">mehdiboulhoujjat2</div>
+                        <button id="follow-btn" value="2"> Follow </button>
+                    </div>
+                    <div class="search-result-user">
+                        <div class="search-user-name">mehdiboulhoujjat3</div>
+                        <button id="follow-btn" value="3"> Follow </button>
+                    </div>
                 </div>
             </div>
             
@@ -156,6 +158,12 @@ export default class Dash extends HTMLElement {
 
         // - GET THE DATA NEEDED FOR THE DASHBOARD -//
         // fetch('/api/')
+        function fetch_resquests(){
+
+
+        }
+        let searchResultBoard = document.querySelector('.search-result-board-overflow')
+
         let searchInput = document.querySelector(".search-input");
         let friendsRequests = document.querySelector(".friends-accept-list");
         searchInput.addEventListener("click", ()=>{
@@ -165,9 +173,21 @@ export default class Dash extends HTMLElement {
         friendsRequests.addEventListener("click", ()=>{
             friendsRequests.style.width = "70%";
             searchInput.style.width = "30%";
-
-            
-            
+            fetch('/api/get-requests/')
+            .then(response =>response.json())
+            .then(data =>{
+                searchResultBoard.innerHTML = '';
+                data.forEach((item) =>{
+                    console.log('hello');
+                    searchResultBoard.innerHTML += /*html*/`
+                    <div class="search-result-user">
+                    <div class="search-user-name">${item.sender.username}</div>
+                    <button id="accept-btn" value="${item.id}"> Accept </button>
+                    <button id="reject-btn" value="${item.id}"> Reject </button>
+                    </div>
+                    `
+                })
+            })
         })
 
 		let picker = document.querySelector('.picker-3');
@@ -179,7 +199,7 @@ export default class Dash extends HTMLElement {
 		    popup.openModal();
 		});
 
-        let searchResultUsers = document.querySelectorAll('.search-result-user');
+
         searchInput.addEventListener('input', (event) => {
             // console.log(event.target.value);
             let searchingString = event.target.value;
@@ -189,33 +209,50 @@ export default class Dash extends HTMLElement {
                 fetch(`/api/search/${searchingString}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
-                    var i = 0;
-                    searchResultUsers.forEach((elem)=>{
-                        if(data[i]){
-
-                            elem.innerHTML = /*html*/`
-                            <div class="search-user-name">${data[i].username}</div>
-                            <button id="follow-btn" value="${data[i].id}"> Follow </button>
-                            `;
-                        }
-                        else
-                            elem.innerHTML = "";
-                        i++;
-                        
-                    });
-                    let butns = document.querySelectorAll('#follow-btn');
-                    butns.forEach(function(btn){
-                        btn.addEventListener('click', ()=>{
-                            fetch(`/api/relations/send-friendship/${btn.value}`)
-                            .then(response => response.json())
-                            .then(data =>{
-                                
-                            })
-                        })
-                    });
+                    searchResultBoard.innerHTML = "";
+                    data.forEach((item) =>{
+                            searchResultBoard.innerHTML += /*html*/`
+                            <div class="search-result-user">
+                            <div class="search-user-name">${item.username}</div>
+                            <button id="follow-btn" value="${item.id}"> Follow </button>
+                            </div>
+                            `
+                    })
                 })
+            }else{
+                //make a functions that runs the first time to get users
             }
+            
+            let followBtns = document.querySelectorAll('#follow-btn');
+            followBtns.forEach(function(btn){
+                btn.addEventListener('click', ()=>{
+                    fetch(`/api/relations/send-friendship/${btn.value}`)
+                    .then(response => response.json())
+                    .then(data =>{
+                        
+                    })
+                })
+            });
+            let accept_btns = document.querySelectorAll('#accept-btn');
+            accept_btns.forEach(function(btn){
+                btn.addEventListener('click', ()=>{
+                    fetch(`/api/relations/accept-friendship/${btn.value}`)
+                    .then(response => response.json())
+                    .then(data =>{
+                        
+                    })
+                })
+            });
+            let reject_btns = document.querySelectorAll('#reject-btn');
+            reject_btns.forEach(function(btn){
+                btn.addEventListener('click', ()=>{
+                    fetch(`/api/relations/accept-friendship/${btn.value}`)
+                    .then(response => response.json())
+                    .then(data =>{
+                        
+                    })
+                })
+            });
         })
         
     }

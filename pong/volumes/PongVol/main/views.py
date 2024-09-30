@@ -63,20 +63,3 @@ def DataView(request):
     return data
 
 
-@auth_only
-def UsersSearch(request, search_string):
-    pass
-
-from django.db.models import Q 
-class SearchForUser(AuthRequired, generics.ListAPIView):
-    serializer_class = UserSerializer
-
-    def get_queryset(self):
-        search_string = self.kwargs['search_string']
-        return User.objects.filter(Q(username__icontains=search_string) & ~Q(id = self.request.user.id))[:3]
-
-from users.friends import friendsSerializer
-class RequestsOnWait(AuthRequired, generics.ListAPIView):
-    serializer_class = friendsSerializer
-    def get_queryset(self):
-        return friends.objects.filter(receiver = self.request.user)

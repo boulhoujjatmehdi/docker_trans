@@ -440,9 +440,16 @@ dash-page{
     align-items: center;
     overflow: hidden;
 }
-
+.search-result-board-overflow{
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width:  none;
+}
 .search-result-user{
-    flex:1;
+    
+    height: 33.3333%;
     width: 100%;
     /* background: linear-gradient(45.559deg, #1F9A8A 17%, #34B29E 59%, #29A694 77%, #1F9A8A 86%, #189283 94%, #118A7C 99%); */
     background: linear-gradient(0deg, #1F9A8A 17%,  #118A7C 99%);
@@ -461,7 +468,7 @@ dash-page{
     width: 30%;
     height: 50%;
 }
-#follow-btn{
+.search-result-user button{
     width: 20%;
     height: 50%;
     background-color: transparent;
